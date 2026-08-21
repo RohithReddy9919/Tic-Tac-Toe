@@ -1,0 +1,393 @@
+/* ==========================================================================
+   Tic-Tac-Toe Modern Responsive Stylesheet
+   ========================================================================== */
+
+/* --- CSS Variables / Design Tokens --- */
+:root {
+  /* Color Palette */
+  --bg-primary: #0b0f19;
+  --bg-card: rgba(26, 34, 52, 0.75);
+  --bg-card-border: rgba(255, 255, 255, 0.08);
+  --bg-cell: rgba(30, 41, 59, 0.7);
+  --bg-cell-hover: rgba(51, 65, 85, 0.9);
+  --bg-cell-active: rgba(71, 85, 105, 0.9);
+
+  /* Player Colors */
+  --color-x: #38bdf8;          /* Bright Sky Blue */
+  --color-x-glow: rgba(56, 189, 248, 0.4);
+  --color-o: #f43f5e;          /* Vibrant Rose Pink */
+  --color-o-glow: rgba(244, 63, 94, 0.4);
+  --color-tie: #fbbf24;        /* Warm Amber */
+  --color-win: #10b981;        /* Emerald Green */
+  --color-win-glow: rgba(16, 185, 129, 0.5);
+
+  /* Text & UI */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  /* Sizing & Borders */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+  --shadow-cell: 0 6px 16px -4px rgba(0, 0, 0, 0.4);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Base & Reset --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(244, 63, 94, 0.1) 0%, transparent 40%);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  line-height: 1.5;
+}
+
+/* --- Main Layout Container --- */
+.app-container {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  width: 100%;
+  max-width: 440px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+/* --- Header Section --- */
+.game-header {
+  text-align: center;
+}
+
+.game-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--color-x), #a855f7, var(--color-o));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 2px;
+}
+
+.game-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* --- Scoreboard Section --- */
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.score-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-md);
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.score-card:hover {
+  transform: translateY(-2px);
+}
+
+.score-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.player-x-card .score-label {
+  color: var(--color-x);
+}
+
+.player-o-card .score-label {
+  color: var(--color-o);
+}
+
+.tie-card .score-label {
+  color: var(--color-tie);
+}
+
+.score-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 2px;
+}
+
+/* --- Turn & Status Banner --- */
+.status-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.status-badge {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--bg-card-border);
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all var(--transition-normal);
+}
+
+.current-turn-indicator {
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.current-turn-indicator.turn-x {
+  color: var(--color-x);
+  background: rgba(56, 189, 248, 0.15);
+}
+
+.current-turn-indicator.turn-o {
+  color: var(--color-o);
+  background: rgba(244, 63, 94, 0.15);
+}
+
+.status-badge.winner-x {
+  border-color: var(--color-x);
+  box-shadow: 0 0 16px var(--color-x-glow);
+  color: var(--color-x);
+}
+
+.status-badge.winner-o {
+  border-color: var(--color-o);
+  box-shadow: 0 0 16px var(--color-o-glow);
+  color: var(--color-o);
+}
+
+.status-badge.draw {
+  border-color: var(--color-tie);
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.3);
+  color: var(--color-tie);
+}
+
+/* --- 3x3 Game Board --- */
+.board-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.cell {
+  background: var(--bg-cell);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-cell);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  font-weight: 800;
+  outline: none;
+  position: relative;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--transition-fast), 
+              transform var(--transition-fast), 
+              box-shadow var(--transition-fast),
+              border-color var(--transition-fast);
+}
+
+.cell:hover:not(.occupied):not(:disabled) {
+  background-color: var(--bg-cell-hover);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.cell:active:not(.occupied):not(:disabled) {
+  transform: translateY(0) scale(0.97);
+}
+
+.cell:focus-visible {
+  border-color: var(--color-x);
+  box-shadow: 0 0 0 3px var(--color-x-glow);
+}
+
+/* Occupied & Styled Cells */
+.cell.occupied {
+  cursor: default;
+}
+
+.cell.cell-x {
+  color: var(--color-x);
+  text-shadow: 0 0 14px var(--color-x-glow);
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cell.cell-o {
+  color: var(--color-o);
+  text-shadow: 0 0 14px var(--color-o-glow);
+  animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Winning Cells Highlight */
+.cell.winning-cell {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  border-color: var(--color-win) !important;
+  box-shadow: 0 0 20px var(--color-win-glow) !important;
+  animation: pulseWin 1.2s infinite alternate ease-in-out;
+}
+
+/* Animations */
+@keyframes popIn {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseWin {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.04);
+  }
+}
+
+/* --- Control Buttons --- */
+.controls-container {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  outline: none;
+  border: none;
+  transition: all var(--transition-normal);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0369a1, #075985);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: rgba(30, 41, 59, 0.8);
+  color: var(--text-muted);
+  border: 1px solid var(--bg-card-border);
+}
+
+.btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.8);
+  color: var(--text-main);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-x-glow);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 420px) {
+  body {
+    padding: 12px;
+  }
+
+  .app-container {
+    padding: 20px 16px;
+    gap: 18px;
+  }
+
+  .game-title {
+    font-size: 1.85rem;
+  }
+
+  .cell {
+    font-size: 2.3rem;
+  }
+
+  .btn {
+    padding: 10px 12px;
+    font-size: 0.88rem;
+  }
+}
